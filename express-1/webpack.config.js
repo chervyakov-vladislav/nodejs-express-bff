@@ -1,6 +1,5 @@
 import path from "node:path";
 import TerserPlugin from "terser-webpack-plugin";
-// import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
 
 export default (_env, argv) => {
   const __dirname = import.meta.dirname;
@@ -29,7 +28,6 @@ export default (_env, argv) => {
     },
     resolve: {
       extensions: [".ts", ".js"],
-      // plugins: [new TsconfigPathsPlugin({extensions: [".ts", ".js"]})]
     },
     target: "node",
     experiments: {
