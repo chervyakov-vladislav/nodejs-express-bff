@@ -1,6 +1,15 @@
-import { myFunction } from "./file.js";
+import express from "express";
+import { myFunction } from "./file";
 
-console.log("hello world");
-const a = myFunction(1, 3);
+const app = express();
 
-console.log(a);
+app.get("/", (req, res) => {
+  console.log(myFunction(1, 3));
+  console.log("do something");
+  res.send("<h1>hello</h1>");
+  res.end();
+});
+
+app.listen(3000, () => {
+  console.log("app start on 3000");
+});
