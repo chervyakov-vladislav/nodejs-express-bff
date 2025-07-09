@@ -135,15 +135,11 @@ export const Info = (props) => {
             </ListItem>
             <ListItem>
               <b>Currency</b>{' '}
-              {currencies.map((code) => (
-                <span key={code}>{code} </span>
-              ))}
+              <span>{currencies.join(', ')}</span>
             </ListItem>
               <ListItem>
               <b>Languages</b>{' '}
-              {languages.map((name) => (
-                <span key={name}>{name}</span>
-              ))}
+              <span>{languages.join(', ')}</span>
             </ListItem>
           </List>
         </ListGroup>
