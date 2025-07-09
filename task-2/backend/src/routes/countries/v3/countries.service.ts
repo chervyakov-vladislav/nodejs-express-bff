@@ -1,19 +1,15 @@
-import { NotFoundError } from '../../common/errors/not-found-error';
+import { NotFoundError } from '../../../common/errors/not-found-error';
 import { BASE_URL } from './countries.constants';
+import {
+  compareCountryNames,
+  mapCountry,
+  transformCountry,
+} from './countries.mappers';
 
 export const fetchAllCountries = async (url: string) => {
   const res = await fetch(url).then((r) => r.json());
 
-  const data = res.map(
-    ({ capital, flags, independent, name, population, region }: any) => ({
-      capital,
-      flags,
-      independent,
-      name,
-      population,
-      region,
-    })
-  );
+  const data = res.map(mapCountry).sort(compareCountryNames);
 
   return data;
 };
@@ -25,7 +21,7 @@ export const fetchCountryByName = async (url: string) => {
     throw new NotFoundError();
   }
 
-  const [country] = result;
+  const country = transformCountry(result[0]);
 
   let neighbors = [];
   if (country.borders) {
@@ -43,12 +39,8 @@ export const fetchCountryByName = async (url: string) => {
     region: country.region,
     subregion: country.subregion,
     topLevelDomain: country.topLevelDomain,
-    currencies: country.currencies
-      ? country.currencies.map((el: any) => el.name)
-      : [],
-    languages: country.languages
-      ? country.languages.map((el: any) => el.name)
-      : [],
+    currencies: country.currencies,
+    languages: country.languages,
     neighbors,
   };
 };
@@ -56,5 +48,5 @@ export const fetchCountryByName = async (url: string) => {
 const fetchNeighbors = async (url: string) => {
   const neighbors = await fetch(url).then((r) => r.json());
 
-  return neighbors.map(({ name }: any) => ({ name }));
+  return neighbors.map(({ name }: any) => ({ name: name.common }));
 };

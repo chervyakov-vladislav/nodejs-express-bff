@@ -4,7 +4,7 @@ import {
   handleGetCountryByName,
 } from './countries.controller';
 
-export const COUNTRIES_ROUTE = '/countries';
+export const COUNTRIES_ROUTE = '/v2/countries';
 export const countriesRouter = Router();
 
 countriesRouter.get('/', handleGetAllCountries);
