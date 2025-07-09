@@ -15,5 +15,5 @@ app.use(router);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Start: http://localhost:${PORT}`);
+  console.log(`http://localhost:${PORT}`);
 });

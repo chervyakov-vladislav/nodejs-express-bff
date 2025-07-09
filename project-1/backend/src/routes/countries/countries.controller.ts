@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ALL_COUNTRIES, BASE_URL } from './countries.constants';
-import {
-  fetchAllCountries,
-  fetchCountryByCode,
-  fetchCountryByName,
-} from './countries.model';
+import { fetchAllCountries, fetchCountryByName } from './countries.service';
 
 export const handleGetAllCountries = async (req: Request, res: Response) => {
   const data = await fetchAllCountries(ALL_COUNTRIES);
@@ -26,23 +22,6 @@ export const handleGetCountryByName = async (
 
     res.send(data);
   } catch (err) {
-    console.log(err);
     next(err);
-  }
-};
-
-export const handleGetCountryByCode = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const url = new URL('alpha', BASE_URL);
-    url.searchParams.set('codes', String(req.query.codes));
-    const data = await fetchCountryByCode(url.href);
-
-    res.send(data);
-  } catch (error) {
-    next(error);
   }
 };

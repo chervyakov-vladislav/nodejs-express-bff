@@ -1,4 +1,5 @@
 import { NotFoundError } from '../../common/errors/not-found-error';
+import { BASE_URL } from './countries.constants';
 
 export const fetchAllCountries = async (url: string) => {
   const res = await fetch(url).then((r) => r.json());
@@ -26,6 +27,13 @@ export const fetchCountryByName = async (url: string) => {
 
   const [country] = result;
 
+  let neighbors = [];
+  if (country.borders) {
+    const alphaUrl = new URL('alpha', BASE_URL);
+    alphaUrl.searchParams.set('codes', country.borders.join(','));
+    neighbors = await fetchNeighbors(alphaUrl.href);
+  }
+
   return {
     name: country.name,
     nativeName: country.nativeName,
@@ -41,12 +49,12 @@ export const fetchCountryByName = async (url: string) => {
     languages: country.languages
       ? country.languages.map((el: any) => el.name)
       : [],
-    borders: country.borders,
+    neighbors,
   };
 };
 
-export const fetchCountryByCode = async (url: string) => {
-  const countries = await fetch(url).then((r) => r.json());
+const fetchNeighbors = async (url: string) => {
+  const neighbors = await fetch(url).then((r) => r.json());
 
-  return countries.map(({ name }: any) => ({ name }));
+  return neighbors.map(({ name }: any) => ({ name }));
 };

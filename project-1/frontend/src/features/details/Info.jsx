@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useNeighbors } from './use-neighbors';
 
 const Wrapper = styled.section`
   margin-top: 3rem;
@@ -99,11 +98,9 @@ export const Info = (props) => {
     topLevelDomain,
     currencies = [],
     languages = [],
-    borders = [],
+    neighbors = [],
     push,
   } = props;
-
-  const neighbors = useNeighbors(borders);
 
   return (
     <Wrapper>
@@ -152,16 +149,16 @@ export const Info = (props) => {
         </ListGroup>
         <Meta>
           <b>Border Countries</b>
-          {!borders.length ? (
+          {!neighbors.length ? (
             <span>There is no border countries</span>
           ) : (
             <TagGroup>
-              {neighbors.map((countryName) => (
+              {neighbors.map(({name}) => (
                 <Tag
-                  key={countryName}
-                  onClick={() => push(`/country/${countryName}`)}
+                  key={name}
+                  onClick={() => push(`/country/${name}`)}
                 >
-                  {countryName}
+                  {name}
                 </Tag>
               ))}
             </TagGroup>
