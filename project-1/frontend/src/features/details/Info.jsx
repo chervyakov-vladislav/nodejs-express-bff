@@ -138,14 +138,14 @@ export const Info = (props) => {
             </ListItem>
             <ListItem>
               <b>Currency</b>{' '}
-              {currencies.map((c) => (
-                <span key={c.code}>{c.name} </span>
+              {currencies.map((code) => (
+                <span key={code}>{code} </span>
               ))}
             </ListItem>
-            <ListItem>
-              <b>Top Level Domain</b>{' '}
-              {languages.map((l) => (
-                <span key={l.name}>{l.name}</span>
+              <ListItem>
+              <b>Languages</b>{' '}
+              {languages.map((name) => (
+                <span key={name}>{name}</span>
               ))}
             </ListItem>
           </List>

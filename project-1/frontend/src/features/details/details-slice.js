@@ -34,11 +34,11 @@ const detailsSlice = createSlice({
       })
       .addCase(loadCountryByName.rejected, (state, action) => {
         state.status = 'rejected';
-        state.error = action.payload || action.meta.error;
+        state.error = action.payload || action.error.message;
       })
       .addCase(loadCountryByName.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.currentCountry = action.payload.data[0];
+        state.currentCountry = action.payload.data;
       })
       .addCase(loadNeighborsByBorder.fulfilled, (state, action) => {
         state.neighbors = action.payload.data.map((country) => country.name);
