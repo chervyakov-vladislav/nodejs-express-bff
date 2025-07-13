@@ -127,12 +127,14 @@ export const Info = (props) => {
             </ListItem>
           </List>
           <List>
-            <ListItem>
-              <b>Top Level Domain</b>{' '}
-              {topLevelDomain.map((d) => (
-                <span key={d}>{d}</span>
-              ))}
-            </ListItem>
+            {topLevelDomain && (
+              <ListItem>
+                <b>Top Level Domain</b>{' '}
+                {topLevelDomain.map((d) => (
+                  <span key={d}>{d}</span>
+                ))}
+              </ListItem>
+            )}
             <ListItem>
               <b>Currency</b>{' '}
               <span>{currencies.join(', ')}</span>
