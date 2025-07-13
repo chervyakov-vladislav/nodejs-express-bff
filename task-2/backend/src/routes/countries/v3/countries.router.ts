@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { publicCache } from '../../../common/middlewares/public-cache';
 import {
   handleGetAllCountries,
   handleGetCountryByName,
@@ -7,5 +8,5 @@ import {
 export const COUNTRIES_ROUTE = '/v3/countries';
 export const countriesRouter = Router();
 
-countriesRouter.get('/', handleGetAllCountries);
-countriesRouter.get('/name/:name', handleGetCountryByName);
+countriesRouter.get('/', [publicCache], handleGetAllCountries);
+countriesRouter.get('/name/:name', [publicCache], handleGetCountryByName);
