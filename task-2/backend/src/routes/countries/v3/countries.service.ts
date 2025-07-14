@@ -1,4 +1,6 @@
 import { NotFoundError } from '../../../common/errors/not-found-error';
+import { saveToRedis } from '../../../common/redis/redis-utils';
+import { RedisMetadata } from '../../../common/redis/redis.types';
 import { BASE_URL } from './countries.constants';
 import {
   compareCountryNames,
@@ -6,15 +8,26 @@ import {
   transformCountry,
 } from './countries.mappers';
 
-export const fetchAllCountries = async (url: string) => {
+export const fetchAllCountries = async (
+  url: string,
+  redisMetadata: RedisMetadata
+) => {
   const res = await fetch(url).then((r) => r.json());
-
   const data = res.map(mapCountry).sort(compareCountryNames);
+
+  console.log(redisMetadata);
+
+  if (redisMetadata.cacheKey) {
+    await saveToRedis(redisMetadata.cacheKey, data, redisMetadata.ttl);
+  }
 
   return data;
 };
 
-export const fetchCountryByName = async (url: string) => {
+export const fetchCountryByName = async (
+  url: string,
+  redisMetadata: RedisMetadata
+) => {
   const result = await fetch(url).then((r) => r.json());
 
   if (!Array.isArray(result) || result.length === 0) {
@@ -30,7 +43,7 @@ export const fetchCountryByName = async (url: string) => {
     neighbors = await fetchNeighbors(alphaUrl.href);
   }
 
-  return {
+  const data = {
     name: country.name,
     nativeName: country.nativeName,
     flag: country.flag,
@@ -43,6 +56,12 @@ export const fetchCountryByName = async (url: string) => {
     languages: country.languages,
     neighbors,
   };
+
+  if (redisMetadata.cacheKey) {
+    await saveToRedis(redisMetadata.cacheKey, data, redisMetadata.ttl);
+  }
+
+  return data;
 };
 
 const fetchNeighbors = async (url: string) => {
