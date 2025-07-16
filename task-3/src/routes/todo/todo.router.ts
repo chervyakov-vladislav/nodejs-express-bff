@@ -6,6 +6,6 @@ export const todosRouter = Router();
 
 todosRouter.post('/', handleCreateTodo);
 todosRouter.get('/', handleGetAllTodos);
-todosRouter.get('/:id');
-todosRouter.delete('/:id');
-todosRouter.patch('/:id');
+// todosRouter.get('/:id');
+// todosRouter.delete('/:id');
+// todosRouter.patch('/:id');

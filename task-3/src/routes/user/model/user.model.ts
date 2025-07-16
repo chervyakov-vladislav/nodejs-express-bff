@@ -18,16 +18,24 @@ const userSchema = new Schema<UserDoc>(
   {
     email: {
       type: String,
-      required: true,
-      unique: true,
+      required: [true, 'Email is required'],
+      unique: [true, 'Email must be unique'],
       lowercase: true,
       trim: true,
+      validate: {
+        validator: (value: string) => {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+          return emailRegex.test(value);
+        },
+        message: 'Email is not valid',
+      },
     },
     password: {
       type: String,
-      required: true,
+      required: [true, 'Password is required'],
       trim: true,
-      minlength: 6,
+      minlength: [6, 'min simbols in password - 6'],
     },
   },
   {
