@@ -36,11 +36,19 @@ const userSchema = new Schema<UserDoc>(
       required: [true, 'Password is required'],
       trim: true,
       minlength: [6, 'min simbols in password - 6'],
+      select: false,
     },
   },
   {
     versionKey: false,
     timestamps: true,
+    toJSON: {
+      transform: (_doc, ret) => {
+        delete ret.password;
+
+        return ret;
+      },
+    },
   },
 );
 

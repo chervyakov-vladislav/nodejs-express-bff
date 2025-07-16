@@ -29,7 +29,9 @@ export const handleGetAllUsers = async (
   next: NextFunction,
 ) => {
   try {
-    const users = await getAllUsers();
+    const limit = Number(req.query.limit) || 10;
+    const page = Number(req.query.page) || 1;
+    const users = await getAllUsers(limit, page);
 
     res.json(users);
   } catch (error) {

@@ -24,16 +24,36 @@ export const createUser = async (user: User) => {
   }
 };
 
-export const getAllUsers = async () => {
-  const users = await userModel.find();
+export const getAllUsers = async (limit: number, page: number) => {
+  const [users, total] = await Promise.all([
+    userModel
+      .find()
+      .sort({ email: 1 })
+      .limit(limit)
+      .skip((page - 1) * limit),
+    userModel.countDocuments(),
+  ]);
 
-  return users;
+  const totalPages = Math.ceil(total / limit);
+  const hasNextPage = page < totalPages;
+  const hasPrevPage = page > 1;
+
+  return {
+    data: users,
+    total,
+    page,
+    limit,
+    totalPages,
+    hasNextPage,
+    hasPrevPage,
+  };
 };
 
 export const getUserById = async (id: string) => {
   try {
     const user = await userModel
       .findById(id)
+      .select('+password')
       .orFail(() => new NotFoundError('User does not exist'));
 
     return user;

@@ -25,7 +25,9 @@ export const handleGetAllTodos = async (
   next: NextFunction,
 ) => {
   try {
-    const todos = await getAllTodos();
+    const limit = Number(req.query.limit) || 10;
+    const page = Number(req.query.page) || 1;
+    const todos = await getAllTodos(limit, page);
 
     res.json(todos);
   } catch (error) {
