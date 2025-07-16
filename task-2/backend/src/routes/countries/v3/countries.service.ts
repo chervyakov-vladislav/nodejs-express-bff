@@ -15,8 +15,6 @@ export const fetchAllCountries = async (
   const res = await fetch(url).then((r) => r.json());
   const data = res.map(mapCountry).sort(compareCountryNames);
 
-  console.log(redisMetadata);
-
   if (redisMetadata.cacheKey) {
     await saveToRedis(redisMetadata.cacheKey, data, redisMetadata.ttl);
   }
