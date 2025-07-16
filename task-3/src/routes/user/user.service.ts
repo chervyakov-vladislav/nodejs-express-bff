@@ -11,3 +11,23 @@ export const getAllUsers = async () => {
 
   return users;
 };
+
+export const getUserById = async (id: string) => {
+  const user = await userModel.findById(id).orFail();
+
+  return user;
+};
+
+export const deleteUserById = async (id: string) => {
+  const user = await userModel.findByIdAndDelete(id).orFail();
+
+  return user;
+};
+
+export const updateUserById = async (id: string, userData: User) => {
+  const user = await userModel
+    .findByIdAndUpdate(id, userData, { new: true, runValidators: true })
+    .orFail();
+
+  return user;
+};
