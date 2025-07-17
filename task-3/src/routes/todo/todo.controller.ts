@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { createTodo, getAllTodos } from './todo.service';
+import { createTodo, getAllUserTodos, removeTodo } from './todo.service';
 
 export const handleCreateTodo = async (
   req: Request,
@@ -8,9 +8,8 @@ export const handleCreateTodo = async (
 ) => {
   try {
     const todo = req.body;
-
-    todo.owner = '687745524b6f6d5745070b8c';
-
+    const ownerId = res.locals.user.id;
+    todo.owner = ownerId;
     const newTodo = await createTodo(todo);
 
     res.status(201).json(newTodo);
@@ -19,7 +18,7 @@ export const handleCreateTodo = async (
   }
 };
 
-export const handleGetAllTodos = async (
+export const handleGetAllUserTodos = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -27,9 +26,26 @@ export const handleGetAllTodos = async (
   try {
     const limit = Number(req.query.limit) || 10;
     const page = Number(req.query.page) || 1;
-    const todos = await getAllTodos(limit, page);
+    const ownerId = res.locals.user.id;
+    const todos = await getAllUserTodos(limit, page, ownerId);
 
     res.json(todos);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const handleRemoveUserTodo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const ownerId = res.locals.user.id;
+    const todoId = req.params.id || '';
+    await removeTodo(todoId, ownerId);
+
+    res.json({ message: 'ok' });
   } catch (error) {
     next(error);
   }

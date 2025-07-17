@@ -16,7 +16,7 @@ export const handleCreateUser = async (
       .cookie('access_token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        // sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
         maxAge: 1 * 1000 * 60 * 15, // 15 minutes
       })
       .send();
@@ -40,7 +40,7 @@ export const handleLogInUser = async (
       .cookie('access_token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        // sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
         maxAge: 1 * 1000 * 60 * 15, // 15 minutes
       })
       .send();

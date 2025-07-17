@@ -1,6 +1,7 @@
 import { Error as MongooseError } from 'mongoose';
 import { Todo, todoModel } from './todo.model';
 import { BadRequestError } from '../../common/errors/bad-request-error';
+import { NotFoundError } from '../../common/errors/not-found-error';
 
 export const createTodo = async (todo: Todo) => {
   try {
@@ -16,15 +17,19 @@ export const createTodo = async (todo: Todo) => {
   }
 };
 
-export const getAllTodos = async (limit: number, page: number) => {
+export const getAllUserTodos = async (
+  limit: number,
+  page: number,
+  ownerId: string,
+) => {
   const [todos, total] = await Promise.all([
     todoModel
-      .find()
+      .find({ owner: ownerId })
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip((page - 1) * limit)
       .populate('owner'),
-    todoModel.countDocuments(),
+    todoModel.countDocuments({ owner: ownerId }),
   ]);
 
   const totalPages = Math.ceil(total / limit);
@@ -40,4 +45,21 @@ export const getAllTodos = async (limit: number, page: number) => {
     hasNextPage,
     hasPrevPage,
   };
+};
+
+export const removeTodo = async (todoId: string, ownerId: string) => {
+  try {
+    await todoModel.deleteOne({ owner: ownerId, _id: todoId }).orFail();
+  } catch (error) {
+    console.log(error);
+    if (error instanceof MongooseError.CastError) {
+      throw new BadRequestError();
+    }
+
+    if (error instanceof MongooseError.DocumentNotFoundError) {
+      throw new NotFoundError();
+    }
+
+    throw error;
+  }
 };

@@ -1,11 +1,13 @@
 import { Router } from 'express';
-import { handleCreateTodo, handleGetAllTodos } from './todo.controller';
+import {
+  handleCreateTodo,
+  handleGetAllUserTodos,
+  handleRemoveUserTodo,
+} from './todo.controller';
 
 export const TODOS_ROUTE = '/todos';
 export const todosRouter = Router();
 
 todosRouter.post('/', handleCreateTodo);
-todosRouter.get('/', handleGetAllTodos);
-// todosRouter.get('/:id');
-// todosRouter.delete('/:id');
-// todosRouter.patch('/:id');
+todosRouter.get('/', handleGetAllUserTodos);
+todosRouter.delete('/:id', handleRemoveUserTodo);
