@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 import { customCors } from './common/middlewares/custom-cors';
 import { router } from './routes/router';
 import { errorHandler } from './common/middlewares/error-handler';
@@ -10,6 +11,7 @@ const app = express();
 app.use(customCors);
 app.disable('x-powered-by');
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 app.use(errorHandler);

@@ -1,28 +1,9 @@
 import { Error as MongooseError } from 'mongoose';
 import { NotFoundError } from '../../common/errors/not-found-error';
-import { User, userModel } from './model/user.model';
-import { transformError } from './model/model.error-helpers';
+import { User, userModel } from './user.model';
+import { transformError } from '../../common/errors/error-helpers';
 import { BadRequestError } from '../../common/errors/bad-request-error';
 import { ConflictError } from '../../common/errors/conflict-error';
-
-export const createUser = async (user: User) => {
-  try {
-    const newUser = await userModel.create(user);
-
-    return newUser;
-  } catch (error) {
-    if (error instanceof MongooseError.ValidationError) {
-      const errors = transformError(error);
-      throw new BadRequestError(errors[0].message);
-    }
-
-    if (error instanceof Error && error.message.startsWith('E11000')) {
-      throw new ConflictError('Email should be unique');
-    }
-
-    throw error;
-  }
-};
 
 export const getAllUsers = async (limit: number, page: number) => {
   const [users, total] = await Promise.all([
