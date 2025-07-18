@@ -43,7 +43,7 @@ export const handleLoginUser = async (
         secure: process.env.NODE_ENV === 'production',
         maxAge: 1000 * 60 * 15, // 15 min
       })
-      .send();
+      .send({});
   } catch (error) {
     next(error);
   }

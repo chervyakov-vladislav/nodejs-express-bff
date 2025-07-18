@@ -180,7 +180,6 @@ userSchema.statics.findUserByCredentials = async function (
   if (!isCorrectPassword) {
     throw new NotAuthorizedError('Invalid credentials');
   }
-  delete doc.password;
 
   return doc;
 };
