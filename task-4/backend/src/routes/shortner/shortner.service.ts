@@ -1,4 +1,6 @@
 import BadRequestError from '../../common/errors/bad-request-error';
+import ForbiddenError from '../../common/errors/forbidden-error';
+import NotFoundError from '../../common/errors/not-found-error';
 import { transformId } from '../../common/helpers/transform-mongo-id';
 import { shortnerModel } from './shortner.model';
 
@@ -51,4 +53,55 @@ export const getShortUrl = async (link: string, ownerId: string) => {
   });
 
   return data;
+};
+
+export const getAllShortLinksByUser = async (ownerId: string) => {
+  return shortnerModel.find({ owner: ownerId });
+};
+
+export const updateShortLink = async (
+  id: string,
+  newLink: string,
+  ownerId: string
+) => {
+  const currentShortLink = await shortnerModel.findById(id);
+
+  if (!currentShortLink) {
+    throw new NotFoundError();
+  }
+
+  if (!currentShortLink.checkOwner(ownerId)) {
+    throw new ForbiddenError('You have no access to this resource');
+  }
+
+  const response = await serviceFetch(newLink);
+
+  if (!response) {
+    throw new BadRequestError('Request failed');
+  }
+
+  const { short_url } = response;
+
+  const data = await shortnerModel.updateSafe(id, {
+    originalLink: newLink,
+    shortLink: short_url,
+  });
+
+  return data;
+};
+
+export const removeShortLink = async (id: string, ownerId: string) => {
+  const shortLink = await shortnerModel.findById(id);
+
+  if (!shortLink) {
+    throw new NotFoundError();
+  }
+
+  if (!shortLink.checkOwner(ownerId)) {
+    throw new ForbiddenError('You have no access to this resource');
+  }
+
+  await shortnerModel.findByIdAndDelete(id);
+
+  return;
 };

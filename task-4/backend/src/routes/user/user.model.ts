@@ -92,7 +92,7 @@ userSchema.methods.generateAccessToken = function () {
   const JWT_SECRET = process.env.JWT_SECRET || '';
 
   return jwt.sign({ id: this._id }, JWT_SECRET, {
-    expiresIn: '15m',
+    expiresIn: '2h',
   });
 };
 
