@@ -1,4 +1,5 @@
 import BadRequestError from '../../common/errors/bad-request-error';
+import { transformId } from '../../common/helpers/transform-mongo-id';
 import { shortnerModel } from './shortner.model';
 
 const serviceUrl = process.env.SHORTNER_API_URL || '';
@@ -35,7 +36,7 @@ const serviceFetch = async <T = ServiceResponse>(
   }
 };
 
-export const getShortUrl = async (link: string) => {
+export const getShortUrl = async (link: string, ownerId: string) => {
   const response = await serviceFetch(link);
 
   if (!response) {
@@ -46,6 +47,7 @@ export const getShortUrl = async (link: string) => {
   const data = await shortnerModel.createSafe({
     originalLink: link,
     shortLink: short_url,
+    owner: transformId(ownerId),
   });
 
   return data;

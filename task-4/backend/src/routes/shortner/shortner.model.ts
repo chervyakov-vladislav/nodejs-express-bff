@@ -1,11 +1,11 @@
-import { Model, Schema, model, Error as MongooseError } from 'mongoose';
+import { Model, Schema, model, Error as MongooseError, Types } from 'mongoose';
 import { transformError } from '../../common/helpers/transform-error';
 import BadRequestError from '../../common/errors/bad-request-error';
 
 interface Shortner {
   originalLink: string;
   shortLink: string;
-  // owner: string;
+  owner: Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -27,6 +27,11 @@ const shortnerSchema = new Schema<ShortnerDoc>(
       type: String,
       required: [true, 'Short link is required'],
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: true,
+    },
   },
   {
     versionKey: false,
@@ -40,8 +45,9 @@ shortnerSchema.statics.createSafe = async function (
   try {
     const doc = new this(data);
     const savedDoc = await doc.save();
+    const populatedDoc = await savedDoc.populate('owner');
 
-    return savedDoc;
+    return populatedDoc;
   } catch (error) {
     if (error instanceof MongooseError.ValidationError) {
       const errors = transformError(error);
