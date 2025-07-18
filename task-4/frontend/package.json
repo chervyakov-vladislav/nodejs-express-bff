@@ -17,7 +17,7 @@
     "use-match-media-hook": "^1.0.1"
   },
   "scripts": {
-    "start": "rsbuild dev",
+    "dev": "rsbuild dev",
     "build": "rsbuild build",
     "preview": "rsbuild preview"
   },
