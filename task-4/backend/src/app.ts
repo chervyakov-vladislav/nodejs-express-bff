@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 
 import { errorHandler } from './common/middlewares/error-handler';
 import { router } from './routes/router';
+import { errorLogger, requestLogger } from './common/middlewares/logger';
 
 const PORT = Number(process.env.PORT) || 3000;
 const MONGO_URL = process.env.MONGO_URL || '';
@@ -22,7 +23,9 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(requestLogger);
 app.use(router);
+app.use(errorLogger);
 app.use(errorHandler);
 
 const run = async () => {
