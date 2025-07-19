@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 
 import { errorHandler } from './common/middlewares/error-handler';
 import { router } from './routes/router';
@@ -13,7 +14,12 @@ const MONGO_URL = process.env.MONGO_URL || '';
 
 const app = express();
 
-app.disable('x-powered-by');
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    xPoweredBy: false,
+  })
+);
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,

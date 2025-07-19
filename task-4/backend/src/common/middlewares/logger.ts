@@ -2,7 +2,7 @@ import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import expressWinston from 'express-winston';
 
-const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+// TODO: добавить управление уровнем логирования
 
 const utcTimestamp = () => {
   const now = new Date();
@@ -51,7 +51,7 @@ export const requestLogger = expressWinston.logger({
     }),
     dailyRotateTransport,
   ],
-  level: LOG_LEVEL,
+  level: 'info',
 });
 
 export const errorLogger = expressWinston.errorLogger({
@@ -65,5 +65,5 @@ export const errorLogger = expressWinston.errorLogger({
     }),
     dailyRotateTransportErrors,
   ],
-  level: LOG_LEVEL,
+  level: 'error',
 });
